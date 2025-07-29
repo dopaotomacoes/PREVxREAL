@@ -1,0 +1,14 @@
+'''unidades_servicos = [
+    ("pinheirinho", "cartao"),
+    ("pinheirinho", "amorsaude"),
+    ("araucaria", "cartao"),
+    ("araucaria", "amorsaude"),
+    ("francisco_beltrao", "cartao"),
+    ("francisco_beltrao", "amorsaude"),
+    ("montenegro", "cartao"),
+    ("montenegro", "amorsaude"),
+    ("colombo", "cartao"),
+    ("colombo", "amorsaude"),
+    ("sao_joao", "cartao"),
+    ("sao_joao", "amorsaude"),
+]'''

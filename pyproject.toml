@@ -1,0 +1,7 @@
+[project]
+name = "previsto-realizdo"
+version = "0.1.0"
+description = "extrai informações da omie e cria um relatório de previsto-realizdo"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
