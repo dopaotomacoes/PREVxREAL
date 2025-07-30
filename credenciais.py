@@ -1,10 +1,11 @@
+
 import os
 import logging
 import sys
 from dotenv import load_dotenv
 from pydantic import BaseModel, EmailStr, Field, ValidationError
 from typing import Optional, Dict, Any
-
+import streamlit as st
 # Configuração de logging profissional:
 # - Registra logs em arquivo 'app.log' (append)
 # - Mostra logs no console para facilitar desenvolvimento
@@ -190,3 +191,41 @@ class Config:
             logging.warning("Variável de ambiente PATH_BOLETO não configurada.")
             return None
         return {"path_boleto": path_boleto}
+    @staticmethod
+    def get_app_keys_toml(localidade: str, servico: str) -> Optional[AppKeysConfig]:
+        localidade = localidade.upper()
+        servico = servico.upper()
+
+        app_secrets = st.secrets.get(localidade, None)
+        if not app_secrets:
+            logging.warning(f"Configuração para {localidade} não encontrada no secrets.toml")
+            return None
+
+        app_key = app_secrets.get(f"{servico}_APP_KEY")
+        app_secret = app_secrets.get(f"{servico}_APP_SECRET")
+
+        if not app_key or not app_secret:
+            logging.warning(f"Variáveis {localidade}.{servico}_APP_KEY ou {localidade}.{servico}_APP_SECRET não configuradas.")
+            return None
+
+        try:
+            return AppKeysConfig(app_key=app_key, app_secret=app_secret)
+        except ValidationError as exc:
+            logging.error(f"Validação falhou para {localidade}_{servico}: {exc}")
+            return None
+        
+if __name__ == "__main__":
+    unidades_servicos = [("pinheirinho", "cartao")]
+
+    for localidade, servico in unidades_servicos:
+        keys = Config.get_app_keys_toml(localidade, servico)
+        if keys:
+            print("App Key:", keys.app_key)
+            print("App Secret:", keys.app_secret)
+        else:
+            print("Credenciais não encontradas.")
+
+    
+
+
+    

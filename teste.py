@@ -18,7 +18,8 @@ unidades_servicos = [("pinheirinho", "cartao")]
 
 
 def listar_orcamentos(localidade, servico, ano, mes, tentativas=3):
-    app_keys = Config.get_app_keys(localidade, servico)
+    app_keys = Config.get_app_keys_toml(localidade, servico)
+    st.write(localidade,servico)
     if not app_keys:
         st.error(f"Credenciais não encontradas para {localidade} / {servico}")
         return pd.DataFrame()
