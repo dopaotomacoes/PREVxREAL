@@ -11,10 +11,24 @@ import streamlit as st
 import plotly.express as px
 from datetime import datetime
 import time
+import plotly.express as px
 
 st.set_page_config(layout="wide")
 
-unidades_servicos = [("pinheirinho", "cartao")]
+unidades_servicos = [
+    ("pinheirinho", "cartao"),
+    ("pinheirinho", "amorsaude"),
+    ("araucaria", "cartao"),
+    ("araucaria", "amorsaude"),
+    ("francisco_beltrao", "cartao"),
+    ("francisco_beltrao", "amorsaude"),
+    ("montenegro", "cartao"),
+    ("montenegro", "amorsaude"),
+    ("colombo", "cartao"),
+    ("colombo", "amorsaude"),
+    ("sao_joao", "cartao"),
+    ("sao_joao", "amorsaude"),
+]
 
 
 def listar_orcamentos(localidade, servico, ano, mes, tentativas=3):
@@ -76,6 +90,9 @@ ano = st.sidebar.selectbox("Ano", list(
 mes = st.sidebar.selectbox("Mês", list(range(1, 13)),
                            index=datetime.now().month-1)
 
+
+
+
 # Botão para buscar dados
 
 if st.sidebar.button("Buscar dados"):
@@ -104,15 +121,29 @@ if st.sidebar.button("Buscar dados"):
             # PREVISTOS X REALIZADOS  
             """)
 
+            # Transforma colunas em linhas para poder colorir
+            df_plot = df_filtrado.melt(
+                id_vars="Categoria",
+                value_vars=["Previsto", "Realizado"],
+                var_name="Tipo",
+                value_name="Valor"
+            )
+
             fig = px.bar(
-                df_filtrado,
+                df_plot,
                 y="Categoria",
-                x=["Previsto", "Realizado"],
+                x="Valor",
+                color="Tipo",
                 barmode="group",
                 text_auto=True,
                 orientation="h",
-                title=f"{servico} - {localidade} - {str(mes).zfill(2)}/{ano}"
+                title=f"{servico} - {localidade} - {str(mes).zfill(2)}/{ano}",
+                color_discrete_map={
+                    "Previsto": "blue",
+                    "Realizado": "red"
+                }
             )
+
 
             fig.update_traces(textposition="outside")
             fig.update_layout(
